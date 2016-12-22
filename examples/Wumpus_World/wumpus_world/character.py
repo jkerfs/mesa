@@ -1,7 +1,17 @@
 import random
+from enum import Enum
 
 from mesa import Agent
 from mesa.space import SingleGrid
+
+
+class State(Enum):
+    Left = 0
+    Up = 1
+    Right = 2
+    Down = 3
+
+state_to_delta = {State.Left: (-1, 0), State.Up: (0, 1), State.Right: (1, 0), State.Down: (0, -1)}
 
 
 class Character(Agent):
@@ -11,7 +21,8 @@ class Character(Agent):
         '''
         super().__init__(pos, model)
         self.x, self.y = pos
-
+        self.state = State.Right
+        self._next_state = self.state
         self.pit_locs = SingleGrid(4, 4, False)
         self.wumpus_locs = SingleGrid(4, 4, False)
         for i in range(4):
@@ -60,11 +71,16 @@ class Character(Agent):
             if has_wumpus + has_pit == 0:
                 options.append(pos)
 
-        self.x, self.y = random.choice(options)
-        self.model.agent_grid.move_agent(self, (self.x, self.y))
+        forward_x, forward_y = state_to_delta[self.state]
+        if (self.x + forward_x, self.y + forward_y) in options:
+            self.x += forward_x
+            self.y += forward_y
+            self.model.agent_grid.move_agent(self, (self.x, self.y))
+        else:
+            self._next_state = State((self.state.value + random.choice([-1, 1])) % 4)
 
     def advance(self):
         '''
-
+        Update the state to the next state
         '''
-        pass
+        self.state = self._next_state
