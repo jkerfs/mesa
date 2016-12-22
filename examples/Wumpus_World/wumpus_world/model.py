@@ -1,13 +1,18 @@
-from random import random
-
-from game_of_life.cell import Cell
+from wumpus_world.character import Character
 
 from mesa import Model
-from mesa.space import Grid
+from mesa.space import Grid, MultiGrid
 from mesa.time import SimultaneousActivation
 
 
-class GameOfLife(Model):
+layout = [
+    [['S'], [' '], ['B'], ['P']],
+    [['W'], ['S', 'B', 'G'], ['P'], ['B']],
+    [['S'], [' '], ['B'], [' ']],
+    [[' '], ['B'], ['P'], ['B']]
+]
+
+class WumpusWorld(Model):
     '''
     Represents the 2-dimensional array of cells in Conway's
     Game of Life.
@@ -27,20 +32,24 @@ class GameOfLife(Model):
         self.schedule = SimultaneousActivation(self)
 
         # Use a simple grid, where edges wrap around.
-        self.grid = Grid(height, width, torus=True)
+        self.agent_grid = Grid(height, width, torus=False)
+        self.environment_grid = MultiGrid(height, width, torus=False)
 
-        # Place a cell at each location, with some initialized to
-        # ALIVE and some to DEAD.
-        for (contents, x, y) in self.grid.coord_iter():
-            cell = Cell((x, y), self)
-            if random() < .1:
-                cell.state = cell.ALIVE
-            self.grid.place_agent(cell, (x, y))
-            self.schedule.add(cell)
+        for i, row in enumerate(layout):
+            for j, entry in enumerate(row):
+                self.environment_grid.place_element(entry, (j, 3-i))
+
+        self.agent = Character((0,0), self)
+
+        self.agent_grid.place_agent(self.agent, (0, 0))
+        self.schedule.add(self.agent)
         self.running = True
 
     def step(self):
         '''
         Have the scheduler advance each cell by one step
         '''
-        self.schedule.step()
+        if not self.agent.isAlive:
+            self.running = False
+        else:
+            self.schedule.step()

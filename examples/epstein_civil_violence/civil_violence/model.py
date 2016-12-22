@@ -1,10 +1,9 @@
 import random
 
 from mesa import Model
-from mesa.time import RandomActivation
-from mesa.space import Grid
 from mesa.datacollection import DataCollector
-
+from mesa.space import Grid
+from mesa.time import RandomActivation
 from .agent import Cop, Citizen
 
 

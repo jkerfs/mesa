@@ -167,9 +167,12 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
         msg = tornado.escape.json_decode(message)
 
         if msg["type"] == "get_step":
-            self.application.model.step()
-            self.write_message({"type": "viz_state",
-                    "data": self.application.render_model()})
+            if not self.application.model.running:
+                self.write_message({"type": "end"})
+            else:
+                self.application.model.step()
+                self.write_message({"type": "viz_state",
+                        "data": self.application.render_model()})
 
         elif msg["type"] == "reset":
             self.application.reset_model()
@@ -204,6 +207,7 @@ class ModularServer(tornado.web.Application):
     socket_handler = (r'/ws', SocketHandler)
     static_handler = (r'/static/(.*)', tornado.web.StaticFileHandler,
                       {"path": os.path.dirname(__file__) + "/templates"})
+
     local_handler = (r'/local/(.*)', tornado.web.StaticFileHandler,
                      {"path": ''})
 
@@ -218,6 +222,7 @@ class ModularServer(tornado.web.Application):
         """ Create a new visualization server with the given elements. """
         # Prep visualization elements:
         self.visualization_elements = visualization_elements
+
         self.package_includes = set()
         self.local_includes = set()
         self.js_code = []

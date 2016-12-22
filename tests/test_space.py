@@ -1,7 +1,8 @@
 import unittest
 
-from mesa.space import ContinuousSpace
 from test_grid import MockAgent
+
+from mesa.space import ContinuousSpace
 
 TEST_AGENTS = [(-20, -20), (-20, -20.05), (65, 18)]
 OUTSIDE_POSITIONS = [(70, 10), (30, 20), (100, 10)]

@@ -11,8 +11,8 @@ import random
 
 from mesa import Agent, Model
 from mesa.datacollection import DataCollector
-from mesa.time import BaseScheduler, RandomActivation, SimultaneousActivation
 from mesa.space import SingleGrid
+from mesa.time import BaseScheduler, RandomActivation, SimultaneousActivation
 
 
 class PD_Agent(Agent):

@@ -61,17 +61,44 @@ var GridVisualization = function(width, height, gridWidth, gridHeight, context) 
                         // canvas y direction is from top to bottom. But we
                         // normally keep y-axis in plots from bottom to top.
                         p.y = gridHeight - p.y - 1;
+            if (p.Shape == "image")
+                this.drawImage(p.x, p.y, p.w, p.h, p.url, p.opacity)
 			if (p.Shape == "rect")
 				this.drawRectangle(p.x, p.y, p.w, p.h, p.Color, p.Filled, p.text, p.text_color);
 			else if (p.Shape == "circle")
 				this.drawCircle(p.x, p.y, p.r, p.Color, p.Filled, p.text, p.text_color);
-                        else if (p.Shape == "arrowHead")
+            else if (p.Shape == "arrowHead")
 				this.drawArrowHead(p.x, p.y, p.heading_x, p.heading_y, p.scale, p.Color, p.Filled, p.text, p.text_color);
 		}
 	};
 
 	// DRAWING METHODS
 	// =====================================================================
+
+
+
+  	/**
+	Draw a circle in the specified grid cell.
+	x, y: Grid coords
+	w, h: width and height of the image
+	url: path to the image,
+	opacity: transparency of the image
+        */
+	this.drawImage = function(x, y, w, h, url, opacity) {
+		var dx = w * cellWidth;
+		var dy = h * cellHeight;
+
+		var x0 = (x + 0.5) * cellWidth - dx/2;
+		var y0 = (y + 0.5) * cellHeight - dy/2;
+
+        var img = new Image();
+        img.src = url;
+        img.onload = function() {
+            return function(){
+            context.drawImage(img, x0, y0, dx, dy);
+        } }();
+	};
+
 
 	/**
 	Draw a circle in the specified grid cell.
@@ -143,6 +170,7 @@ var GridVisualization = function(width, height, gridWidth, gridHeight, context) 
                         context.textBaseline= 'middle';
                         context.fillText(text, cx, cy);
                 }
+
 	};
 
         /**

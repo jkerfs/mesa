@@ -2,13 +2,12 @@
 The model - a 2D lattice where agents live and have an opinion
 """
 
-
 import random
 from collections import Counter
 
 from mesa import Model, Agent
-from mesa.time import SimultaneousActivation
 from mesa.space import Grid
+from mesa.time import SimultaneousActivation
 
 
 class ColorCell(Agent):

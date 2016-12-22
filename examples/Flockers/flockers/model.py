@@ -5,14 +5,13 @@ A Mesa implementation of Craig Reynolds's Boids flocker model.
 Uses numpy arrays to represent vectors.
 '''
 
-
 import random
+
 import numpy as np
 
 from mesa import Model
 from mesa.space import ContinuousSpace
 from mesa.time import RandomActivation
-
 from .boid import Boid
 
 

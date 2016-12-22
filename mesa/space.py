@@ -319,6 +319,14 @@ class Grid:
         x, y = pos
         return True if self.grid[x][y] == self.default_val() else False
 
+    def place_rectangle(self, br, ul, v):
+        for i in range(br[0], ul[0]):
+            for j in range(br[1],ul[1]):
+                self.grid[i][j] = v
+
+    def place_element(self, element, pos):
+        x, y = pos
+        self.grid[x][y] = element
 
 class SingleGrid(Grid):
     """ Grid where each cell contains exactly at most one object. """
@@ -592,5 +600,5 @@ class ContinuousSpace:
     def out_of_bounds(self, pos):
         """ Check if a point is out of bounds. """
         x, y = pos
-        return (x < self.x_min or x >= self.x_max or
-                y < self.y_min or y >= self.y_max)
+        return (x < self.x_min or x > self.x_max or
+                y < self.y_min or y > self.y_max)

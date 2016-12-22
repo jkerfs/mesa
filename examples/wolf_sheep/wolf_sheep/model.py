@@ -11,12 +11,12 @@ Replication of the model found in NetLogo:
 
 import random
 
-from mesa import Model
-from mesa.space import MultiGrid
-from mesa.datacollection import DataCollector
-
 from wolf_sheep.agents import Sheep, Wolf, GrassPatch
 from wolf_sheep.schedule import RandomActivationByBreed
+
+from mesa import Model
+from mesa.datacollection import DataCollector
+from mesa.space import MultiGrid
 
 
 class WolfSheepPredation(Model):

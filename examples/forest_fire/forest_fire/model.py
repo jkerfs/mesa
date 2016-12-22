@@ -1,11 +1,11 @@
 import random
 
+from examples.ForestFire.forest_fire.agent import TreeCell
+
 from mesa import Model
 from mesa.datacollection import DataCollector
 from mesa.space import Grid
 from mesa.time import RandomActivation
-
-from examples.ForestFire.forest_fire.agent import TreeCell
 
 
 class ForestFire(Model):
@@ -42,7 +42,7 @@ class ForestFire(Model):
                 # Set all trees in the first column on fire.
                 if x == 0:
                     new_tree.condition = "On Fire"
-                self.grid._place_agent((x, y), new_tree)
+                self.grid._place_element((x, y), new_tree)
                 self.schedule.add(new_tree)
         self.running = True
 

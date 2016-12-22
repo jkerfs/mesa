@@ -218,7 +218,7 @@ class TestSingleGrid(unittest.TestCase):
         assert len(self.grid.empties) == 9
         a = MockAgent(100, None)
         with self.assertRaises(Exception):
-            self.grid._place_agent((0, 1), a)
+            self.grid._place_element((0, 1), a)
 
         # Place the agent in an empty cell
         self.grid.position_agent(a)
