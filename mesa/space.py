@@ -295,22 +295,26 @@ class Grid:
             pos: Tuple of new position to move the agent to.
 
         """
-        self._remove_agent(agent.pos, agent)
-        self._place_agent(pos, agent)
+        self._remove_element(agent.pos, agent)
+        self._place_element(pos, agent)
         agent.pos = pos
 
     def place_agent(self, agent, pos):
         """ Position an agent on the grid, and set its pos variable. """
-        self._place_agent(pos, agent)
+        self._place_element(pos, agent)
         agent.pos = pos
 
-    def _place_agent(self, pos, agent):
-        """ Place the agent at the correct location. """
-        x, y = pos
-        self.grid[x][y] = agent
+    def place_value(self, val, pos):
+        """ Place a non-agent value on the the grid. """
+        self._place_element(pos, val)
 
-    def _remove_agent(self, pos, agent):
-        """ Remove the agent from the given location. """
+    def _place_element(self, pos, elem):
+        """ Place the agent/element at the correct location. """
+        x, y = pos
+        self.grid[x][y] = elem
+
+    def _remove_element(self, pos, elem):
+        """ Remove the agent/element from the given location. """
         x, y = pos
         self.grid[x][y] = None
 
@@ -344,9 +348,9 @@ class SingleGrid(Grid):
         if new_pos is None:
             raise Exception("ERROR: No empty cells")
         else:
-            self._place_agent(new_pos, agent)
+            self._place_element(new_pos, agent)
             agent.pos = new_pos
-            self._remove_agent(pos, agent)
+            self._remove_element(pos, agent)
 
     def find_empty(self):
         """ Pick a random empty cell. """
@@ -377,17 +381,17 @@ class SingleGrid(Grid):
         else:
             coords = (x, y)
         agent.pos = coords
-        self._place_agent(coords, agent)
+        self._place_element(coords, agent)
 
-    def _place_agent(self, pos, agent):
+    def _place_element(self, pos, elem):
         if self.is_cell_empty(pos):
-            super()._place_agent(pos, agent)
+            super()._place_element(pos, elem)
             self.empties.remove(pos)
         else:
             raise Exception("Cell not empty")
 
-    def _remove_agent(self, pos, agent):
-        super()._remove_agent(pos, agent)
+    def _remove_element(self, pos, elem):
+        super()._remove_element(pos, elem)
         self.empties.append(pos)
 
 
@@ -415,15 +419,15 @@ class MultiGrid(Grid):
         """ Default value for new cell elements. """
         return set()
 
-    def _place_agent(self, pos, agent):
+    def _place_element(self, pos, elem):
         """ Place the agent at the correct location. """
         x, y = pos
-        self.grid[x][y].add(agent)
+        self.grid[x][y].add(elem)
 
-    def _remove_agent(self, pos, agent):
+    def _remove_element(self, pos, elem):
         """ Remove the agent from the given location. """
         x, y = pos
-        self.grid[x][y].remove(agent)
+        self.grid[x][y].remove(elem)
 
     @accept_tuple_argument
     def iter_cell_list_contents(self, cell_list):
@@ -488,7 +492,7 @@ class ContinuousSpace:
 
         """
         pos = self.torus_adj(pos)
-        self._place_agent(pos, agent)
+        self._place_element(pos, agent)
         agent.pos = pos
 
     def move_agent(self, agent, pos):
@@ -500,19 +504,19 @@ class ContinuousSpace:
 
         """
         pos = self.torus_adj(pos)
-        self._remove_agent(agent.pos, agent)
-        self._place_agent(pos, agent)
+        self._remove_element(agent.pos, agent)
+        self._place_element(pos, agent)
         agent.pos = pos
 
-    def _place_agent(self, pos, agent):
+    def _place_element(self, pos, elem):
         """ Place an agent at a given point, and update the internal grid. """
         cell = self._point_to_cell(pos)
-        self._grid._place_agent(cell, agent)
+        self._grid._place_element(cell, elem)
 
-    def _remove_agent(self, pos, agent):
+    def _remove_element(self, pos, elem):
         """ Remove an agent at a given point, and update the internal grid. """
         cell = self._point_to_cell(pos)
-        self._grid._remove_agent(cell, agent)
+        self._grid._remove_element(cell, elem)
 
     def get_neighbors(self, pos, radius, include_center=True):
         """ Get all objects within a certain radius.
